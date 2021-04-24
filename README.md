@@ -6,9 +6,9 @@
       </p>
       <ul>
         <h3>Instructions</h3>
-        <li>Copy the text from Mp3CodeSnippet.txt and paste it in your HTML Embed section</li>
-        <li>You can paste the css code in your global section, or create a style tag</li>
-        <li>If you are using a hard-code mp3 links then, put it in "AudioSourceUrl" variable</li>
-        <li>If you are dynamically taking it from CMS Collection then leave the "AudioSourceUrl" variable empty</li>
+        <li>Copy the text from Mp3CodeSnippet.txt and paste it in your HTML Embed section.</li>
+        <li>You can paste the css code in your global section, or create a style tag.</li>
+        <li>If you are using a hard-code mp3 links then, put it in "AudioSourceUrl" variable.</li>
+        <li>If you are dynamically taking it from CMS Collection then leave the "AudioSourceUrl" variable empty.</li>
       </ul>
     </div>

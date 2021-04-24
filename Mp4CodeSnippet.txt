@@ -1,0 +1,168 @@
+<!-- Copy paste this code in your HTML Embbed Section. You can also add styles to element by using 'style' property, ie: <div class="example" style="display: flex;margin-top: 10px;"></div> -->
+<!-- The CSS file is in the global section -->
+
+<div class="mp4Section">
+  <audio src="" style="display: none" id="audiofile" type="audio/mp4"  controls preload="metadata">
+  </audio>
+  <div class="mp3-holder">
+    <section class="audio-player-single-track-wrapper-2">
+      <div class="control-wrapper-2">
+        <div class="play-wrapper" id="play-wrapper">
+          <img
+            src="https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b929748b85e0c1757158_play_arrow.svg"
+            height="40"
+            width="28"
+            alt="Play"
+            id="playPausebtn"
+            class="play-2"
+            hide-if="playing"
+          />
+        </div>
+      </div>
+      <div id="seek-wrapper" class="audio-player-bar-wrapper bar-wrapper">
+        <div id="duration" class="duration-2">0:00</div>
+        <div id="seek-value" class="current-seconds-2">0:00</div>
+        <div id="seek-bar" class="audio-player-bar">
+          <div id="progressBar" class="active-bar-2" style="width: 0%"></div>
+        </div>
+      </div>
+      <div class="options-wrapper-2">
+        <img
+          src="https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b9690b6116e680b4f41d_replay.svg"
+          height="40"
+          width="25"
+          id="rewind"
+          alt="Replay"
+          class="repeat"
+        />
+        <div id="volume-wrapper" class="audio-player-volume-wrapper bar-wrapper-volume">
+          <img
+            src="https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b9a492a3ed6cf280944a_remove.svg"
+            height="40"
+            width="25"
+            id="volume-down"
+            alt="Decrease Volume"
+            class="volume-down"
+          />
+          <div class="volume-bar-wrapper">
+            <div id="volume-bar" class="volume-bar">
+              <div id="current-volume" class="volume-bar-active-2" style="width: 100%"></div>
+            </div>
+          </div>
+          <img
+            src="https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b9db28657ffa497a82d4_add.svg"
+            height="40"
+            width="25"
+            id="volume-up"
+            alt="Increase Volume"
+            class="volume-up"
+          />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    //   The Javascript starts from here
+    const audiosrc = document.getElementById('audiofile');
+    const playWrapper = document.getElementById('play-wrapper');
+    const playPausebtn = document.getElementById('playPausebtn');
+    // If you are using CMS Database then leave an empty string in AudioSourceUrl
+    var AudioSourceUrl = 'https://s3.ap-south-1.amazonaws.com/alokkhatri.com/alokkhatri.com+home.mp3';
+    if (AudioSourceUrl.length > 10) {
+      console.log('Custom URl');
+      document.getElementById('audiofile').setAttribute('src', AudioSourceUrl);
+      audiosrc.load();
+    } else {
+      console.log('CMC URl');
+      document
+        .getElementById('audiofile')
+        .setAttribute(
+          'src',
+          '{{wf {&quot;path&quot;:&quot;mp3-audio-link&quot;,&quot;type&quot;:&quot;Link&quot;\} }}'
+        );
+      audiosrc.load();
+    }
+
+    if (playWrapper) {
+      playWrapper.addEventListener('click', function (x) {
+        if (audiosrc.paused) {
+          playPausebtn.setAttribute(
+            'src',
+            'https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b955a693b215299a6a0c_pause.svg'
+          );
+          audiosrc.play();
+        } else {
+          playPausebtn.setAttribute(
+            'src',
+            'https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b929748b85e0c1757158_play_arrow.svg'
+          );
+          audiosrc.pause();
+        }
+      });
+    }
+    const totalDuration = document.getElementById('duration');
+    const currentDuration = document.getElementById('seek-value');
+    var minutes = Math.floor(audiosrc.duration / 60);
+    var seconds = Math.round(audiosrc.duration - minutes * 60, 1);
+    audiosrc.onloadedmetadata = function () {
+      var minutes = Math.floor(audiosrc.duration / 60);
+      var seconds = Math.round(audiosrc.duration - minutes * 60, 1);
+      if (seconds < 10) {
+        seconds = '0' + seconds.toString();
+      }
+      totalDuration.innerText = minutes.toString() + ':' + seconds.toString();
+    };
+
+    
+    audiosrc.ontimeupdate = function () {
+      document.getElementById('progressBar').style.width =
+        ((audiosrc.currentTime / audiosrc.duration) * 100).toString() + '%';
+      var minutes = Math.floor(audiosrc.currentTime / 60);
+      var seconds = Math.round(audiosrc.currentTime - minutes * 60, 1);
+      if (seconds < 10) {
+        seconds = '0' + seconds;
+      }
+
+      currentDuration.innerText = minutes.toString() + ':' + seconds.toString();
+    };
+
+    document.getElementById('rewind').addEventListener('click', function () {
+      audiosrc.load();
+      playPausebtn.setAttribute(
+        'src',
+        'https://uploads-ssl.webflow.com/60687d0673e522ebc9e8ce21/6079b955a693b215299a6a0c_pause.svg'
+      );
+      audiosrc.play();
+    });
+    audiosrc.volume = 1;
+    document.getElementById('volume-up').addEventListener('click', function () {
+      currentVolume = audiosrc.volume;
+      if (currentVolume <= 1) {
+        currentVolume += 0.2;
+        if (currentVolume > 1) {
+          currentVolume = 1;
+        }
+        document.getElementById('current-volume').style.width = (currentVolume * 100).toString() + '%';
+        audiosrc.volume = currentVolume;
+      }
+    });
+    document.getElementById('volume-down').addEventListener('click', function () {
+      currentVolume = audiosrc.volume;
+      if (currentVolume >= 0 && currentVolume <= 1) {
+        currentVolume -= 0.2;
+        if (currentVolume < 0) {
+          currentVolume = 0;
+        }
+        document.getElementById('current-volume').style.width = (currentVolume * 100).toString() + '%';
+        audiosrc.volume = currentVolume;
+      }
+    });
+    const seekBar = document.getElementById('seek-bar');
+    seekBar.addEventListener('click', function (e) {
+      var bcr = this.getBoundingClientRect();
+      CurrentTimePercentage = (e.clientX - bcr.left) / bcr.width;
+      audiosrc.currentTime = audiosrc.duration * CurrentTimePercentage;
+    });
+  </script>
+</div>
